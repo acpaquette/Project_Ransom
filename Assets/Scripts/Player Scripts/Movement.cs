@@ -1,15 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 // Handles the physics of player movement
-public class PlayerMovement : MonoBehaviour {
+public class Movement : MonoBehaviour {
 	public float xStart;
 	public float yStart;
 
 	private int speed;
 
 	private Rigidbody2D rb;
-	private Vector2 playerVelocity;
+	private Vector2 objectVelocity;
 
 	private double xPrevious;
 	private double yPrevious;
@@ -35,31 +36,24 @@ public class PlayerMovement : MonoBehaviour {
 	// Moves the player up by the ySpeed as a normalized physics vector
 	// Needs to be edited
 	// Current moves player at a stepper diagonal
-	public void Move(string[] directions, int speed) {
+	public void Move(float?[] directions, int speed) {
 		Vector2 vector = new Vector2(0, 0);
-		foreach (string move in directions) {
-			if (move == "Right") {
-				vector.x += speed;
+		foreach (float? move in directions) {
+			if (move == null) {
+				continue;
 			}
-			else if (move == "Left") {
-				vector.x -= speed;
-			}
-			else if (move == "Up") {
-				vector.y += speed;
-			}
-			else if (move == "Down") {
-				vector.y -= speed;
+			else {
+				vector.x += Mathf.Cos((float)move);
+				vector.y += Mathf.Sin((float)move);
 			}
 		}
-		playerVelocity = speed * (vector.normalized);
-		Debug.Log(playerVelocity);
-		if (playerVelocity.x == 0 && playerVelocity.y == 0) {
-			Debug.Log(rb.velocity);
-			Vector2.Scale(rb.velocity, new Vector2(50f, 50f));
-			Debug.Log(rb.velocity);
+		objectVelocity = speed * (vector.normalized);
+		Debug.Log(objectVelocity);
+		if (objectVelocity.x == 0 && objectVelocity.y == 0) {
+			rb.velocity = Vector2.Scale(rb.velocity, new Vector2(.99f, .99f));
 		}
 		else {
-			rb.velocity = playerVelocity;
+			rb.velocity = objectVelocity;
 		}
 	}
 
