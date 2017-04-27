@@ -2,12 +2,12 @@
 using System.Collections;
 
 // Handles the physics of player movement
-public class PlayerMovement : MonoBehaviour, IMovement {
+public class PlayerMovement : MonoBehaviour {
 	public float xStart;
 	public float yStart;
 
-	public float xSpeed;
-	public float ySpeed;
+	private int speed;
+
 	private Rigidbody2D rb;
 	private Vector2 playerVelocity;
 
@@ -26,45 +26,41 @@ public class PlayerMovement : MonoBehaviour, IMovement {
   public void Update () {
 		xPrevious = rb.position.x;
 		yPrevious = rb.position.y;
+		// Debug.Log(playerVelocity);
 	}
 
 	public void FixedUpdate () {
 	}
 
 	// Moves the player up by the ySpeed as a normalized physics vector
-	public void MoveUp () {
-		Vector2 vector = rb.velocity;
-		vector.y += ySpeed;
-	  magnitude = Mathf.Sqrt(Mathf.Pow(vector.x, 2) + Mathf.Pow(vector.y, 2));
-		vector = ySpeed * (vector/magnitude);
-		rb.velocity = vector;
-	}
-
-	// Moves the player down by the negation of the ySpeed as a normalized physics vector
-	public void MoveDown () {
-		Vector2 vector = rb.velocity;
-		vector.y -= ySpeed;
-		magnitude = Mathf.Sqrt(Mathf.Pow(vector.x, 2) + Mathf.Pow(vector.y, 2));
-		vector = ySpeed * (vector/magnitude);
-		rb.velocity = vector;
-	}
-
-	// Moves the player to the right by the xSpeed as a normalized physics vector
-	public void MoveRight () {
-		Vector2 vector = rb.velocity;
-		vector.x += xSpeed;
-		magnitude = Mathf.Sqrt(Mathf.Pow(vector.x, 2) + Mathf.Pow(vector.y, 2));
-		vector = xSpeed * (vector/magnitude);
-		rb.velocity = vector;
-	}
-
-	// Moves the player to the left by the negation of the xSpeed as a normalized physics vector
-	public void MoveLeft () {
-		Vector2 vector = rb.velocity;
-		vector.x -= xSpeed;
-		magnitude = Mathf.Sqrt(Mathf.Pow(vector.x, 2) + Mathf.Pow(vector.y, 2));
-		vector = xSpeed * (vector/magnitude);
-		rb.velocity = vector;
+	// Needs to be edited
+	// Current moves player at a stepper diagonal
+	public void Move(string[] directions, int speed) {
+		Vector2 vector = new Vector2(0, 0);
+		foreach (string move in directions) {
+			if (move == "Right") {
+				vector.x += speed;
+			}
+			else if (move == "Left") {
+				vector.x -= speed;
+			}
+			else if (move == "Up") {
+				vector.y += speed;
+			}
+			else if (move == "Down") {
+				vector.y -= speed;
+			}
+		}
+		playerVelocity = speed * (vector.normalized);
+		Debug.Log(playerVelocity);
+		if (playerVelocity.x == 0 && playerVelocity.y == 0) {
+			Debug.Log(rb.velocity);
+			Vector2.Scale(rb.velocity, new Vector2(50f, 50f));
+			Debug.Log(rb.velocity);
+		}
+		else {
+			rb.velocity = playerVelocity;
+		}
 	}
 
 	// Will immidiatly stop the players movement

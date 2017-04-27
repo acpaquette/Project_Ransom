@@ -13,7 +13,7 @@ public class positional_render : MonoBehaviour {
 		current_object = GetComponent<SpriteRenderer>();
 	}
 
-	void FixedUpdate () {
+	void Update() {
 		player_position = player.GetComponent<Transform>().position.y;
 		object_position = GetComponent<Transform>().position.y;
 		if (player_position > object_position + .5) {
@@ -22,5 +22,8 @@ public class positional_render : MonoBehaviour {
 		else if (player_position <= object_position + .5) {
 			current_object.sortingOrder = 0;
 		}
+	}
+
+	void FixedUpdate () {
 	}
 }

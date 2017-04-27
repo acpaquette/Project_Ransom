@@ -4,7 +4,9 @@ using System.Collections;
 public class PlayerControl : MonoBehaviour {
 	private PlayerMovement movement;
 	private Rigidbody2D rb;
+	private string[] moves = new string[4];
 	public int speed;
+	private int runSpeed;
 	public bool canMove;
 
 	// Use this for initialization
@@ -16,27 +18,40 @@ public class PlayerControl : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetButton("Jump")) {
-			canMove = false;
-			Debug.Log("Hahaha");
-		}
-		else {
-			canMove = true;
-		}
 	}
 
+	// FixedUpdate is called once per physics tick
 	void FixedUpdate () {
-		if (Input.GetButton("Right") && rb.velocity.x <= speed && canMove) {
-			movement.MoveRight();
+		if (Input.GetKey(KeyCode.W) && canMove) {
+			moves[0] = "Up";
 		}
-		if (Input.GetButton("Left") && rb.velocity.x >= -speed && canMove) {
-			movement.MoveLeft();
+		else {
+			moves[0] = null;
 		}
-		if (Input.GetButton("Up") && rb.velocity.y <= speed && canMove) {
-			movement.MoveUp();
-	  }
-	  if (Input.GetButton("Down") && rb.velocity.y >= -speed && canMove) {
-		  movement.MoveDown();
+		if (Input.GetKey(KeyCode.S) && canMove) {
+			moves[1] = "Down";
 		}
-  }
+		else {
+			moves[1] = null;
+		}
+		if (Input.GetKey(KeyCode.A) && canMove) {
+			moves[2] = "Left";
+		}
+		else {
+			moves[2] = null;
+		}
+		if (Input.GetKey(KeyCode.D) && canMove) {
+			moves[3] = "Right";
+		}
+		else {
+			moves[3] = null;
+		}
+		if (Input.GetKey(KeyCode.LeftShift)) {
+			runSpeed = speed + speed/2;
+			movement.Move(moves, runSpeed);
+		}
+		else {
+			movement.Move(moves, speed);
+		}
+	}
 }
