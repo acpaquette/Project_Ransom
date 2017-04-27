@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 // Handles the physics of player movement
-public class Movement : MonoBehaviour {
+public class Movement : MonoBehaviour, IMovement {
 	public float xStart;
 	public float yStart;
 

@@ -3,6 +3,6 @@
 
 interface IMovement {
 
-	void Move(string[] directions, int speed);
+	void Move(float?[] directions, int speed);
 
 }
