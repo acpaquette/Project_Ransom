@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class PlayerControl : MonoBehaviour {
 	private Movement playerMovement;
-	private float?[] moves = new float?[4];
+	private float?[] movementDirection = new float?[2];
   private GameObject player;
   private Transform playerTransform;
   private float power = 0.0f;
@@ -18,41 +18,30 @@ public class PlayerControl : MonoBehaviour {
 	void Start () {
 		playerMovement = GetComponent<Movement>();
 		canMove = true;
-		moves[0] = null;
-		moves[1] = null;
-		moves[2] = null;
-		moves[3] = null;
 	}
 
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKey(KeyCode.W) && canMove) {
-			moves[0] = Mathf.PI/2;
+		if (Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S) && canMove) {
+			movementDirection[1] = 1f;
+		}
+		else if (Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.W) && canMove) {
+			movementDirection[1] = -1f;
 		}
 		else {
-			moves[0] = null;
+			movementDirection[1] = 0f;
 		}
-		if (Input.GetKey(KeyCode.S) && canMove) {
-			moves[1] = 3*Mathf.PI/2;
+		if (Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A) && canMove) {
+			movementDirection[0] = 1f;
 		}
-		else {
-			moves[1] = null;
-		}
-		if (Input.GetKey(KeyCode.A) && canMove) {
-			moves[2] = Mathf.PI;
+		else if (Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D) && canMove) {
+			movementDirection[0] = -1f;
 		}
 		else {
-			moves[2] = null;
-		}
-		if (Input.GetKey(KeyCode.D) && canMove) {
-			moves[3] = 0;
-		}
-		else {
-			moves[3] = null;
+			movementDirection[0] = 0f;
 		}
     if (Input.GetKey(KeyCode.J)) {
-      if (power < 50f) {
-        Debug.Log(power);
+      if (power < 10f) {
         power += .5f;
       }
     }
@@ -67,10 +56,10 @@ public class PlayerControl : MonoBehaviour {
 		// }
 		if (Input.GetKey(KeyCode.LeftShift)) {
 			runSpeed = speed + speed/2;
-			playerMovement.Move(moves, runSpeed);
+			playerMovement.Move(movementDirection, runSpeed);
 		}
 		else {
-			playerMovement.Move(moves, speed);
+			playerMovement.Move(movementDirection, speed);
 		}
 	}
 
@@ -79,11 +68,12 @@ public class PlayerControl : MonoBehaviour {
 		playerTransform = player.GetComponent(typeof(Transform)) as Transform;
 		// Debug.Log(playerTransform.position);
 		GameObject shot = (GameObject) Instantiate(Resources.Load("Shot"),
-																							 new Vector3(playerTransform.position[0] + 0.5f,
-																													 playerTransform.position[1], 0),
+																							 new Vector3(playerTransform.position[0] + .5f,
+																													 playerTransform.position[1] + 1,
+																													 0),
 																							 Quaternion.identity);
 		Rigidbody2D shotRb = shot.GetComponent(typeof(Rigidbody2D)) as Rigidbody2D;
-		shotRb.velocity = new Vector2(2, 1) * power;
+		shotRb.velocity = new Vector2(2, .1f) * power;
 		power = 0.0f;
 		arrowCount -= 1;
 		canFire = false;

@@ -7,8 +7,6 @@ public class Movement : MonoBehaviour, IMovement {
 	public float xStart;
 	public float yStart;
 
-	private int speed;
-
 	private Rigidbody2D rb;
 	private Vector2 objectVelocity;
 
@@ -27,7 +25,6 @@ public class Movement : MonoBehaviour, IMovement {
   public void Update () {
 		xPrevious = rb.position.x;
 		yPrevious = rb.position.y;
-		// Debug.Log(playerVelocity);
 	}
 
 	public void FixedUpdate () {
@@ -36,18 +33,10 @@ public class Movement : MonoBehaviour, IMovement {
 	// Moves the player up by the ySpeed as a normalized physics vector
 	// Needs to be edited
 	// Current moves player at a stepper diagonal
-	public void Move(float?[] directions, int speed) {
-		Vector2 vector = new Vector2(0, 0);
-		foreach (float? move in directions) {
-			if (move == null) {
-				continue;
-			}
-			else {
-				vector.x += Mathf.Cos((float)move);
-				vector.y += Mathf.Sin((float)move);
-			}
-		}
+	public void Move(float?[] direction, int speed) {
+		Vector2 vector = new Vector2((float)direction[0], (float)direction[1]);
 		objectVelocity = speed * (vector.normalized);
+		Debug.Log(objectVelocity);
 		if (objectVelocity.x == 0f && objectVelocity.y == 0f) {
 			rb.velocity = Vector2.Scale(rb.velocity, new Vector2(.99f, .99f));
 		}
