@@ -48,8 +48,7 @@ public class Movement : MonoBehaviour, IMovement {
 			}
 		}
 		objectVelocity = speed * (vector.normalized);
-		Debug.Log(objectVelocity);
-		if (objectVelocity.x == 0 && objectVelocity.y == 0) {
+		if (objectVelocity.x == 0f && objectVelocity.y == 0f) {
 			rb.velocity = Vector2.Scale(rb.velocity, new Vector2(.99f, .99f));
 		}
 		else {

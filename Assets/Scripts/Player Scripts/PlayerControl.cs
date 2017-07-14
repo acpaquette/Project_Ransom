@@ -1,11 +1,15 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
 public class PlayerControl : MonoBehaviour {
 	private Movement playerMovement;
-	private Rigidbody2D rb;
 	private float?[] moves = new float?[4];
+  private GameObject player;
+  private Transform playerTransform;
+  private float power = 0.0f;
+	public int arrowCount = 0;
+	private bool canFire = true;
 	public int speed;
 	private int runSpeed;
 	public bool canMove;
@@ -13,7 +17,6 @@ public class PlayerControl : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		playerMovement = GetComponent<Movement>();
-		rb = GetComponent<Rigidbody2D>();
 		canMove = true;
 		moves[0] = null;
 		moves[1] = null;
@@ -23,10 +26,6 @@ public class PlayerControl : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-	}
-
-	// FixedUpdate is called once per physics tick
-	void FixedUpdate () {
 		if (Input.GetKey(KeyCode.W) && canMove) {
 			moves[0] = Mathf.PI/2;
 		}
@@ -51,6 +50,21 @@ public class PlayerControl : MonoBehaviour {
 		else {
 			moves[3] = null;
 		}
+    if (Input.GetKey(KeyCode.J)) {
+      if (power < 50f) {
+        Debug.Log(power);
+        power += .5f;
+      }
+    }
+		if (Input.GetKeyUp(KeyCode.J) && arrowCount > 0 && canFire) {
+			StartCoroutine(shootArrow());
+		}
+		// while (Input.GetKey(KeyCode.Space)) {
+		// 	float?[] jumpBack = new float?[1];
+		// 	jumpBack[0] = Mathf.PI;
+		// 	playerMovement.Move(jumpBack, 20);
+		// 	canMove = false;
+		// }
 		if (Input.GetKey(KeyCode.LeftShift)) {
 			runSpeed = speed + speed/2;
 			playerMovement.Move(moves, runSpeed);
@@ -58,5 +72,26 @@ public class PlayerControl : MonoBehaviour {
 		else {
 			playerMovement.Move(moves, speed);
 		}
+	}
+
+	IEnumerator shootArrow() {
+		player = GameObject.Find("player_character");
+		playerTransform = player.GetComponent(typeof(Transform)) as Transform;
+		// Debug.Log(playerTransform.position);
+		GameObject shot = (GameObject) Instantiate(Resources.Load("Shot"),
+																							 new Vector3(playerTransform.position[0] + 0.5f,
+																													 playerTransform.position[1], 0),
+																							 Quaternion.identity);
+		Rigidbody2D shotRb = shot.GetComponent(typeof(Rigidbody2D)) as Rigidbody2D;
+		shotRb.velocity = new Vector2(2, 1) * power;
+		power = 0.0f;
+		arrowCount -= 1;
+		canFire = false;
+		yield return new WaitForSeconds(.5f);
+		canFire = true;
+	}
+
+	// FixedUpdate is called once per physics tick
+	void FixedUpdate () {
 	}
 }
