@@ -33,7 +33,7 @@ public class Movement : MonoBehaviour, IMovement {
 	// Moves the player up by the ySpeed as a normalized physics vector
 	// Needs to be edited
 	// Current moves player at a stepper diagonal
-	public void Move(float?[] direction, int speed) {
+	public void Move(float?[] direction, float speed) {
 		Vector2 vector = new Vector2((float)direction[0], (float)direction[1]);
 		objectVelocity = speed * (vector.normalized);
 		Debug.Log(objectVelocity);

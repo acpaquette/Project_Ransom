@@ -11,7 +11,8 @@ public class PlayerControl : MonoBehaviour {
 	public int arrowCount = 0;
 	private bool canFire = true;
 	public int speed;
-	private int runSpeed;
+	public float runMutiplier;
+	private float runSpeed;
 	public bool canMove;
 
 	// Use this for initialization
@@ -55,7 +56,7 @@ public class PlayerControl : MonoBehaviour {
 		// 	canMove = false;
 		// }
 		if (Input.GetKey(KeyCode.LeftShift)) {
-			runSpeed = speed + speed/2;
+			runSpeed = speed*runMutiplier;
 			playerMovement.Move(movementDirection, runSpeed);
 		}
 		else {
